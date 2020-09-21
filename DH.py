@@ -7,6 +7,7 @@ Created on Fri Sep 18 10:47:37 2020
 
 import random
 
+
 #server private key
 def server_key():
     return random.randint(1,999);
