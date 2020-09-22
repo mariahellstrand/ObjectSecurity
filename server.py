@@ -21,32 +21,32 @@ sock.bind((udp_host,udp_port))
 
 
 def key_exchange():
-	clientPrivat = pickle.loads(sock.recvfrom(1024)[0])
+	#generate private key
 	privateKey = DH.server_key()
-	sharedKey = pickle.loads(sock.recvfrom(1024)[0])
-	#print(sharedKey)
-	#calculate server side dh value
-	serverValue = DH.calc_dh(sharedKey[0], privateKey, sharedKey[1])
-	sock.sendto(pickle.dumps(serverValue), (udp_host, udp_port))
-	#print(serverValue)
-	clientMix = pickle.loads(sock.recvfrom(1024)[0])
-	#print(clientMix)
+
+	#recieve shared key from client
+	newAddress = sock.recvfrom(1024)
+	sharedKey = pickle.loads(newAddress[0])
+	
+	#calculate server side mix
+	serverMix = DH.calc_dh(sharedKey[0], privateKey, sharedKey[1])
+	#send server side mix
+	sock.sendto(pickle.dumps(serverMix), newAddress[1])
+	
+	#recieve client mix
+	newAddress = sock.recvfrom(1024)
+	clientMix = pickle.loads(newAddress[0])
+	
 	#calculate final DH
 	resultDH = DH.calc_dh(clientMix, privateKey, sharedKey[1])
-	#test
 	
-	clientResult = pickle.loads(sock.recvfrom(1024)[0])
-	print("server privat: ",privateKey)
-	print("client privat: " ,clientPrivat)
-	print("server blandning ", serverValue)
-	print("client blandning ", clientMix)
-	print("server DH: ", resultDH)
-	print("client DH: ", clientResult)
+	return resultDH
 
-key_exchange()	
+key = key_exchange()
+print("server key: ", key)	
 
-while True:
-	print("Waiting for client...")
-	data,addr = sock.recvfrom(1024)	        #receive data from client
-	print("Received Messages:",data," from",addr)
+#while True:
+#	print("Waiting for client...")
+#	data,addr = sock.recvfrom(1024)	        #receive data from client
+#	print("Received Messages:",data," from",addr)
 

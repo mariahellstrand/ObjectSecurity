@@ -15,23 +15,31 @@ udp_host = socket.gethostname()		# Host IP
 udp_port = 12345                    # specified port to connect
 
 def key_exchange():
+    #generate private key
     privateKey = DH.client_key()
-    sock.sendto(pickle.dumps(privateKey), (udp_host,udp_port))
+    
+    #generate shared key
     sharedKey = DH.shared_key()
     #send shared key to server
     sock.sendto(pickle.dumps(sharedKey), (udp_host,udp_port))
-    #calculate client side dh value
+
+    #calculate client mix
     clientValue = DH.calc_dh(sharedKey[0], privateKey, sharedKey[1])
+    #send client mix
     sock.sendto(pickle.dumps(clientValue), (udp_host,udp_port))
-    serverMix = pickle.loads(sock.recvfrom(1024)[0])
+    #recieve server mix
+    newAddress = sock.recvfrom(1024)
+    serverMix = pickle.loads(newAddress[0])
+
     #calculate final DH
     resultDH = DH.calc_dh(serverMix, privateKey, sharedKey[1])
-    #testar nyckalr
-    
-    sock.sendto(pickle.dumps(resultDH), (udp_host,udp_port))
+
+    return resultDH
     
 
-key_exchange()			        
+
+key = key_exchange()
+print("Client key: ", key)			        
 
 msg = "Hello Python!"
 print("UDP target IP:", udp_host)
