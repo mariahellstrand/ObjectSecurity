@@ -6,7 +6,8 @@ import encryptor
 
 udp_host = socket.gethostname()		        # Host IP
 udp_port = 12345			                # specified port to connect
-
+server_dir = "./Nonce_Log/"					#directory to log timestamps
+server_logs = "server-logs"					#file to log servers timestamps
 
 def key_exchange(sock):
 	#generate private key

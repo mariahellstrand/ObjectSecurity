@@ -6,7 +6,8 @@ import encryptor
 
 udp_host = socket.gethostname()		# Host IP
 udp_port = 12345                    # specified port to connect
-
+client_dir = "./Nonce_Log/"         #directory to log timestamps
+client_logs = "client-logs"         #directory to log clients timestamps
 
 def startConnection(sock):
     print("starting a connection")
@@ -53,6 +54,8 @@ def Main():
     while True:
         print("What message would you like to send?: ")
         message = input(": ")
+        nonce = encryptor.getNonce()
+        #här borde vi skicka med noncen i krypteringen
         encrypted_message = encryptor.encrypt2(message, key)
         sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
 

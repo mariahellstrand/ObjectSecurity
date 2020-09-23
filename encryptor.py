@@ -5,7 +5,13 @@ import pickle
 import re
 import hashlib
 
+import time
+import datetime
+import os
+
 blocksize = AES.block_size
+#test_dir = "./Nonce_Log/"
+#test_file = "client-logs"
 
 def int_to_bytes(x: int) -> bytes:
     return x.to_bytes((x.bit_length() + 7) // 8, 'big')
@@ -51,3 +57,41 @@ def decrypt(data, sharedkey):
     message = undo_padding(temp)
     return message
 
+
+#----Generate and check nonce------
+
+def getNonce() -> str:
+    timeInSec = time.time()
+    nonce = datetime.datetime.fromtimestamp(timeInSec).strftime('%Y-%m-%d %H:%M:%S')
+    print("Generated the nonce: ", nonce)
+    return nonce
+
+
+def isNonceValid(nonce, dir, filename):
+    #check if file exists, adds file if not
+    if not checkIfFileExists(dir, filename):
+        addNonce(nonce, dir, filename)
+        print("Received unique nonce: ", nonce)
+        return True
+    elif nonce not in open(dir + filename).read():
+        addNonce(nonce, dir, filename)
+        print("Received unique nonce: ", nonce)
+        return True
+    else:
+        print("Nonce not valid")
+        return False
+
+def checkIfFileExists(dir, filename):
+    #lists all files in directory dir and checks if filename exists
+    for file in os.listdir(dir):
+        if file == filename:
+            return True
+    return False
+
+def addNonce(nonce, dir, filename):
+    with open(dir + filename + ".txt", "a") as nonce_file:
+        nonce_file.write(nonce + "\n")
+
+
+#n = getNonce()
+#isNonceValid(n, test_dir, test_file)
