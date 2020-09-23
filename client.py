@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 18 09:35:37 2020
-
-@author: Maria Hellstrand
-"""
-
 import socket
 import DH
 import pickle
 
-sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP
+
 
 udp_host = socket.gethostname()		# Host IP
 udp_port = 12345                    # specified port to connect
 
-def key_exchange():
+def startConnection(sock):
+    print("starting a connection")
+    # Starting Diffie Hellman handshake
+    key = key_exchange(sock)
+    print("Agreed shared key: ", key)
+    print("Handshake done")
+
+def key_exchange(sock):
     #generate private key
     privateKey = DH.client_key()
     
@@ -38,13 +38,35 @@ def key_exchange():
     
 
 
-key = key_exchange()
-print("Client key: ", key)			        
+			        
 
-msg = "Hello Python!"
-print("UDP target IP:", udp_host)
-print("UDP target Port:", udp_port)
+#msg = "Hello Python!"
+#print("UDP target IP:", udp_host)
+#print("UDP target Port:", udp_port)
 
-sock.sendto(msg.encode('utf-8'),(udp_host,udp_port))		# Sending message to UDP server
+def menu():
+    commands = ["s","q"]
+    print("Type \'type\' to initiate handshake".replace('type', commands[0]))
+    print("Type \'type\ to quit".replace('type', commands[1]))
+
+#MAIN
 
 
+
+
+def Main():
+    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP   
+
+    print("choose what to do: ")
+    COMMAND = input(": ")
+    while COMMAND != "q":
+        if COMMAND == "s":
+            startConnection(sock)
+        
+        print("choose what to do: ")
+        COMMAND = input(": ")
+ 
+    #sock.sendto(msg.encode('utf-8'),(udp_host,udp_port))		# Sending message to UDP server
+
+if __name__ == '__main__':
+    Main()
