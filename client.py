@@ -1,11 +1,12 @@
 import socket
 import DH
 import pickle
-
+import encryptor
 
 
 udp_host = socket.gethostname()		# Host IP
 udp_port = 12345                    # specified port to connect
+
 
 def startConnection(sock):
     print("starting a connection")
@@ -13,6 +14,7 @@ def startConnection(sock):
     key = key_exchange(sock)
     print("Agreed shared key: ", key)
     print("Handshake done")
+    return key
 
 def key_exchange(sock):
     #generate private key
@@ -37,36 +39,25 @@ def key_exchange(sock):
     return resultDH
     
 
-
-			        
-
-#msg = "Hello Python!"
-#print("UDP target IP:", udp_host)
-#print("UDP target Port:", udp_port)
-
 def menu():
     commands = ["s","q"]
     print("Type \'type\' to initiate handshake".replace('type', commands[0]))
     print("Type \'type\ to quit".replace('type', commands[1]))
 
-#MAIN
-
-
-
 
 def Main():
-    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP   
+    #set up connection and key exchange
+    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP
+    key = startConnection(sock)
 
-    print("choose what to do: ")
-    COMMAND = input(": ")
-    while COMMAND != "q":
-        if COMMAND == "s":
-            startConnection(sock)
-        
-        print("choose what to do: ")
-        COMMAND = input(": ")
- 
-    #sock.sendto(msg.encode('utf-8'),(udp_host,udp_port))		# Sending message to UDP server
+    while True:
+        print("What message would you like to send?: ")
+        message = input(": ")
+        encrypted_message = encryptor.encrypt2(message, key)
+        sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
+
+        print(message)
+
 
 if __name__ == '__main__':
     Main()

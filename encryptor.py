@@ -1,4 +1,3 @@
-
 from Crypto.Hash import HMAC
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -51,9 +50,4 @@ def decrypt(data, sharedkey):
     temp = obj.decrypt(data)
     message = undo_padding(temp)
     return message
-
-x = input(" ")
-c = encrypt2(x, 46774)
-d = decrypt(c, 46774)
-print(d)
 

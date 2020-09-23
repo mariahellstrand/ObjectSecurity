@@ -1,22 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 18 09:32:43 2020
-
-@author: Maria Hellstrand
-"""
-
 import socket
 import DH
 import pickle
+import encryptor
 
 
 udp_host = socket.gethostname()		        # Host IP
 udp_port = 12345			                # specified port to connect
-
-#print type(sock) ============> 'type' can be used to see type 
-				# of any variable ('sock' here)
-
-
 
 
 def key_exchange(sock):
@@ -42,19 +31,25 @@ def key_exchange(sock):
 	return resultDH
 
 
-
-#while True:
-#	print("Waiting for client...")
-#	data,addr = sock.recvfrom(1024)	        #receive data from client
-#	print("Received Messages:",data," from",addr)
-
 def Main():
+	#set up socket
 	sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP
 	sock.bind((udp_host,udp_port))
 	print("socket opened. Waiting for client")
 
+	#key exhcange
 	key = key_exchange(sock)
-	print("Agreed shared key: ", key)	
+	print("Agreed shared key: ", key)
+
+	while True:
+		print("Waiting for message from client")
+		newAddress = sock.recvfrom(1024)
+		encrypted_data = pickle.loads(newAddress[0])
+		decrypted_data = encryptor.decrypt(encrypted_data, key)
+
+		print(decrypted_data)
+
+
 
 if __name__ == '__main__':
     Main()
