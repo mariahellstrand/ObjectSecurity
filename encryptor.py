@@ -31,12 +31,13 @@ def create_iv():
 
 def do_padding(data):
     temp = pickle.dumps(data)
-    return temp + b'\0' * (blocksize - len(temp) % blocksize)
+    hej = temp + b'\0' * (blocksize - len(temp) % blocksize)
+    return hej
 
 def undo_padding(data):
-    return re.sub(b'\0*$', b'', data)
+    return pickle.loads(re.sub(b'\0*$', b'', data))
 
-def encrypt(data, sharedkey):
+def encrypt2(data, sharedkey):
     temp = do_padding(data)
     key = create_aeskey(sharedkey)
     iv = create_aesiv(sharedkey)
@@ -47,16 +48,12 @@ def decrypt(data, sharedkey):
     key = create_aeskey(sharedkey)
     iv = create_aesiv(sharedkey)
     obj = AES.new(key, AES.MODE_CBC, iv)
-    message = undo_padding(obj.decrypt(data))
+    temp = obj.decrypt(data)
+    message = undo_padding(temp)
     return message
 
 x = input(" ")
-w = do_padding(x)
-#print(w)
-#print(w)
-#print(undo_padding(w))
-c = encrypt(w, 46774)
-print(c)
+c = encrypt2(x, 46774)
 d = decrypt(c, 46774)
 print(d)
 
