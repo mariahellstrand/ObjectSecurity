@@ -51,10 +51,25 @@ def Main():
 		message = decrypted_data[0]
 		nonce = decrypted_data[1]
 
-		if not encryptor.isNonceValid(nonce, server_dir, server_logs):
-			print("Nonce not valid. The package will be dismissed")
-		else:
+		if encryptor.isNonceValid(nonce, server_dir, server_logs):
 			print("Recieved message: " + message)
+			sendBack = ""			
+
+			if(message == "1"):
+				sendBack = "Good Morning!"
+			elif (message == "2"):
+				sendBack = "You're beautiful"
+			elif (message == "3"):
+				sendBack = "You can do it!"
+			elif(message == "4"):
+				sendBack = "Good night!"
+			else:
+				sendBack = "invalid choice"	
+
+			sock.sendto(pickle.dumps(sendBack), newAddress[1])
+		else:
+			print("Nonce not valid. The package will be dismissed")
+			
 
 
 if __name__ == '__main__':
