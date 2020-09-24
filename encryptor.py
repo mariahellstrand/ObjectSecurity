@@ -26,11 +26,6 @@ def create_aesiv(key):
     key = hashlib.md5(key).hexdigest()
     return key[16:32]
 
-def create_hash(sharedkey):
-    byteskey = int_to_bytes(sharedkey)
-    hashkey = HMAC.new(byteskey)
-    return hashkey
-
 def create_iv():
     return Random.new().read(blocksize)
 
