@@ -55,11 +55,12 @@ def Main():
         print("What message would you like to send?: ")
         message = input(": ")
         nonce = encryptor.getNonce()
+        temp = (message, nonce)
         #här borde vi skicka med noncen i krypteringen
-        encrypted_message = encryptor.encrypt2(message, key)
+        encrypted_message = encryptor.encrypt2(temp, key)
         sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
 
-        print(message)
+        #print(message)
 
 
 if __name__ == '__main__':

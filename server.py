@@ -43,13 +43,18 @@ def Main():
 	print("Agreed shared key: ", key)
 
 	while True:
-		print("Waiting for message from client")
+		print("Waiting for message from client...")
 		newAddress = sock.recvfrom(1024)
 		encrypted_data = pickle.loads(newAddress[0])
 		decrypted_data = encryptor.decrypt(encrypted_data, key)
 
-		print(decrypted_data)
+		message = decrypted_data[0]
+		nonce = decrypted_data[1]
 
+		if not encryptor.isNonceValid(nonce, server_dir, server_logs):
+			print("Nonce not valid. The package will be dismissed")
+		else:
+			print("Recieved message: " + message)
 
 
 if __name__ == '__main__':
