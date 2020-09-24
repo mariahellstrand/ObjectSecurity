@@ -56,11 +56,10 @@ def Main():
         message = input(": ")
         nonce = encryptor.getNonce()
         temp = (message, nonce)
-        #här borde vi skicka med noncen i krypteringen
+
+        #encrypting message and nonce
         encrypted_message = encryptor.encrypt2(temp, key)
         sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
-
-        #print(message)
 
 
 if __name__ == '__main__':
