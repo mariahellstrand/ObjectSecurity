@@ -64,7 +64,7 @@ def Main():
 			elif(message == "4"):
 				sendBack = "Good night!"
 			else:
-				sendBack = "invalid choice"	
+				sendBack = "Invalid choice"	
 
 			sock.sendto(pickle.dumps(sendBack), newAddress[1])
 		else:

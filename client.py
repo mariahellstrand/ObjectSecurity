@@ -10,11 +10,11 @@ client_dir = "./Nonce_Log/"         #directory to log timestamps
 client_logs = "client-logs"         #directory to log clients timestamps
 
 def startConnection(sock):
-    print("starting a connection")
+    print("\n"+"starting a connection")
     # Starting Diffie Hellman handshake
     key = key_exchange(sock)
     print("Agreed shared key: ", key)
-    print("Handshake done")
+    print("Handshake done" + "\n")
     return key
 
 def key_exchange(sock):
@@ -48,7 +48,7 @@ def menu():
     print("Type \'type\' to get boosted".replace('type', commands[2]))
     print("Type \'type\' to say goodnight".replace('type', commands[3]))
     print("Type \'type\' to quit".replace('type', commands[4]))
-    print("-------------------------------")
+    print("-------------------------------"+"\n")
 
 def startUp():
     menu()
@@ -64,7 +64,6 @@ def Main():
 
     message = startUp()
 
-
     while(message != "q"):
         
         nonce = encryptor.getNonce()
@@ -72,10 +71,11 @@ def Main():
         #encrypting message and nonce
         encrypted_message = encryptor.encrypt2(temp, key)
         sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
+        print("Sending data to server" + "\n")
 
         newAddress = sock.recvfrom(1024)
         serverRespons = pickle.loads(newAddress[0])
-        print(serverRespons)
+        print("\n" + serverRespons + "\n")
 
         message = startUp()
 
