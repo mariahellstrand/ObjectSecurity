@@ -43,7 +43,7 @@ def key_exchange(sock):
 def menu():
     commands = ["1","2","3","4","q"]
     print("-------------menu------------")
-    print("Type \'type\' receive a morning greeting".replace('type', commands[0]))
+    print("Type \'type\' to receive a morning greeting".replace('type', commands[0]))
     print("Type \'type\' to get a compliment".replace('type', commands[1]))
     print("Type \'type\' to get boosted".replace('type', commands[2]))
     print("Type \'type\' to say goodnight".replace('type', commands[3]))
