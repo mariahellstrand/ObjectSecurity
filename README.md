@@ -1,5 +1,7 @@
 # ObjectSecurity
 
+A project in the course EITN50 - Advanced Computer Security
+
 ## Before you run the code ##
 The following python packages needs to be installed:
 
