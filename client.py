@@ -2,6 +2,7 @@ import socket
 import DH
 import pickle
 import encryptor
+import hmac
 
 
 udp_host = socket.gethostname()		# Host IP
@@ -61,8 +62,10 @@ def Main():
     #set up connection and key exchange
     sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)      # For UDP
     key = startConnection(sock)
-
+    bytesKey = encryptor.int_to_bytes(key)
     message = startUp()
+    
+    
 
     while(message != "q"):
         
@@ -70,7 +73,13 @@ def Main():
         temp = (message, nonce)
         #encrypting message and nonce
         encrypted_message = encryptor.encrypt2(temp, key)
+        macMessage = hmac.new(bytesKey, encrypted_message)
+        print("Got hash: ", macMessage)
+        mac=macMessage.digest()
+        print("digested hash: ", mac)
+
         sock.sendto(pickle.dumps(encrypted_message), (udp_host,udp_port))
+        sock.sendto((mac), (udp_host,udp_port))
         print("Sending data to server" + "\n")
 
         newAddress = sock.recvfrom(1024)
